@@ -1,0 +1,90 @@
+
+
+
+
+
+mongo -host mqr1.cs.stir.ac.uk -u ete -p ete ete
+
+
+db.books.insert({"title":"Learning Python", "author":"Lutz",price:30 })
+
+1) db.books.find({"title":"NoSQL Distilled"})
+2) db.books.find({},{"title":1})
+
+
+
+********************ZIPCODE EXAMPLE********************
+
+What is the population of FISHERS ISLAND ?
+
+db.zipcode.find({"city": "FISHERS ISLAND"},{pop:1})
+
+
+2. List all the cities in the state “MA”
+
+db.zipcode.find({"state": "MA"},{city:1})
+
+3. List all the cities with a population between 1 and 10 inclusive and their population 
+
+db.zipcode.find({pop:{$gt :  1, $lte : 10}},{city:1, pop:1})
+
+4. List all the cities in the state “MA” with a population less than 100 
+
+db.zipcode.find({pop:{$lt : 100}, state:"MA"},{city:1, pop:1})
+
+5. List all of the distinct states 
+
+db.zipcode.distinct("state")
+
+6. List the distinct states that contain a city with a population above 100,000
+
+db.zipcode.distinct("state", {"pop":{$gt: 100.000}})
+
+7. What is the size of the smallest city (by population) in each state? 
+
+db.zipcode.aggregate(
+   [
+     {
+       $group:
+         {
+           _id: "$state",
+           minQuantity: { $min: "$pop" },
+         }
+     }
+   ]
+)
+
+
+8. What is the name of the smallest city (by population) in each state? Use the reduce function
+of a group command to find the smallest population. 
+
+
+db.zipcode.group( {
+key: { state: 1 },
+cond: { } },
+reduce: function(cur, result) { result.total += cur.Sales },
+initial: { minvalue: 1000000 }
+} )
+
+9. to count smt.
+
+
+db.galery.aggregate([ { $group: {"_id":"$fields.artist" , "number":{$sum:1}} } ])
+
+
+
+
+-------------deneme----------------
+db.galery.aggregate([{ $match: { fields.title: "East Cowes Castle" } },{$project : {_id :  "$fields.title", exh_total : {$size : "$fields.exhibitions"}}}])
+
+db.galery.aggregate([{$group : {_id : "$fields.title", num_tutorial : {$sum : 1}}}])
+
+
+ddb.galery.aggregate([{ $match: { fields.title: "East Cowes Castle" } },{$group : {_id : {title: "$fields.title",exhibitions: "fields.exhibitions"}, num_tutorial : {$sum : 1}}}
+])
+
+-------------deneme----------------
+
+
+
+
